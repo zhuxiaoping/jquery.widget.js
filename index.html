@@ -1,0 +1,65 @@
+﻿<!DOCTYPE HTML>
+<html>
+ <head>
+ 	   <title>widget</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      <meta name="format-detection" content="telephone=no" />
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+      <script type="text/javascript" src="jquery.widget.js"></script>
+ 	</head>	
+ 	<style>
+ 		html,body{height:100%;}
+ 		body{max-width:640px;margin:0 auto;}
+ 		.widget{
+			width:100%;
+			height:100%;
+			position:absolute;
+			left:100%;
+			top:0;
+			background: rgba(0,0,0,0.5);
+			z-index: 100;
+			-webkit-transform: translate(0px, 0px) translateZ(0px);
+			
+			
+		}
+		.widget .widget-body{background:#ffffff;text-align:center;}
+		#contanier{width:100%;position:relative;border:1px solid #d7d7d7;min-height:100%;overflow-x:hidden;overflow-y:auto;}
+ 	</style>
+ 	<body>
+ 		  <div id="contanier">
+ 		  	 手机端从右向左划出的页面
+ 		  	 <input id="button" type="button" value="点我弹出widget1"/>
+ 		  	 <input id="button2" type="button" value="点我弹出widget2"/>
+ 		  	 <div id="testWidget" class="widget" style="display:none;">
+	 		      <div class="widget-body">
+	 		          <p style="padding:20px 0;text-align:center;">点我不会关闭，点击其他区域关闭</p>
+	 		      </div>	
+ 		      </div>
+ 		     <div id="noCloseWidget" class="widget widget-noclose" style="display:none;">
+	 		      <div class="widget-body">
+	 		          <p style="padding:20px 0;">点我不会关闭，点击其他区域也不关闭</p>
+	 		          <input type="button" value="点我关闭widget2" onclick="$('#noCloseWidget').widget('close');"/>
+	 		      </div>	
+ 		      </div> 
+ 		  </div>
+ 		  
+	    <script>
+	    	$(document).ready(function(){
+	    	    $('.widget').widget({
+	    	        onClose : function(el){
+	    	            console.log('关闭了widget');
+	    	        }	
+	    	    })
+	    	    $("#button").bind('click',function(){
+	    	        	$('#testWidget').widget('open');
+	    	    })
+	    	    $("#button2").bind('click',function(){
+	    	        	$('#noCloseWidget').widget('open');
+	    	    })
+	    	})
+	    </script>
+  </body>
+</html>
