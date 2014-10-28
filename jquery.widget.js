@@ -13,8 +13,7 @@
 					noCloseClass : 'widget-noclose',  
 					widgetBodyClass : '.widget-body',
 					onClose : null,
-					showRightToLeft:true,
-					transitionEnd : function(event){}
+					showRightToLeft:true
 				};			 
 			
 			 this._init(options);
