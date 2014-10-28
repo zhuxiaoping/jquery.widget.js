@@ -1,7 +1,7 @@
 jquery.widget.js
 ================
   
-简介
+Introduction
 -----------------------------------
   手机端简单widget
 ### Usage
