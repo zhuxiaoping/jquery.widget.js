@@ -11,7 +11,7 @@
 					speed : 300,                /*滑出速度 ms*/
 					width : window.document.body.clientWidth,   /*widget滑出距离*/
 					noCloseClass : 'widget-noclose',  
-					widgetBodyClass : '.widget-body',
+					widgetBodyClass : 'widget-body',
 					onClose : null,
 					showRightToLeft:true
 				};			 
@@ -47,7 +47,7 @@
 								    instance.close();
 								    if(opts.onClose) opts.onClose(el);
 							});
-							el.find(opts.widgetBodyClass).unbind('click').click(function (event) {
+							el.find('.'+opts.widgetBodyClass).unbind('click').click(function (event) {
 						        event.stopPropagation();
 						  });    
 		     },
