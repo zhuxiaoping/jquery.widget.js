@@ -1,0 +1,72 @@
+﻿<!DOCTYPE HTML>
+<html>
+ <head>
+ 	   <title>响应式</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      <meta name="format-detection" content="telephone=no" />
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+      <script type="text/javascript" src="jquery.widget.js"></script>
+ 	</head>	
+ 	<style>
+ 		html,body{height:100%;}
+		.widget .widget-body{background:#ffffff;text-align:center;}
+		#container{width:100%;position:relative;min-height:100%;}
+		.menu{
+				min-height: 100%;
+				background: #83bf9f;
+				position: absolute;
+				left: 0;
+		}
+		
+		@media screen and (min-width:640px){
+			   .menu{width:30%;}
+			   .widget{width:70%;position: absolute;left: 30%;min-height:100%;}
+			   .widget .menu-bar{display:none;}
+		}
+		@media screen and (max-width:640px){
+			   .menu{width:80%;}
+			   .widget{
+						width:100%;
+						height:100%;
+						position:absolute;			
+						top:0;
+						left:0;			
+						z-index: 100;							
+		     }
+			   .widget .menu-bar{text-align: left;margin:10px;}
+		}
+ 	</style>
+ 	<body>
+ 		  <div id="container">
+ 		  	 <div class="menu">菜单</div>	  	  	 
+ 		     <div class="widget" style="background: #ffffff;text-align:center;">
+	 		       <div class="menu-bar"><input type="button" value="菜单" onclick="showOrCloseWidget()"/></div>
+	 		       <div class="widget-body">
+	 		           	主页内容
+	 		       </div> 		          
+ 		      </div> 
+ 		  </div>
+ 		  
+	    <script>
+	    	$(document).ready(function(){
+	    		  var bodyWidth = document.body.clientWidth;
+	    		  var width = bodyWidth * 0.8;
+	    		   $('.menu').css('width',width+'px')
+	    		   if(bodyWidth <= 640)
+	    	     $('.widget').widget({    	     	  
+	    	     	  direction:'right',
+	    	     	  left:0,
+	    	     	  distance:width,
+	    	     	  container: $('#container')[0]
+	    	    })	    	   
+	    	})
+	    	
+	    	function showOrCloseWidget(){
+	    		   $('.widget').widget('isShow') ? $('.widget').widget('close') : $('.widget').widget('open');
+	    		}
+	    </script>
+  </body>
+</html>
