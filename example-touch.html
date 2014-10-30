@@ -37,14 +37,14 @@
  		     <div id="noCloseWidget" class="widget" style="background: #ffffff;text-align:center;">
 	 		       <div class="menu-bar"><input type="button" value="菜单" onclick="showOrCloseWidget()"/></div>
 	 		       <div class="widget-body">
-	 		           	<div id="output">主页内容</div>
+	 		           	<div id="output" style="text-align:left;">主页内容</div>
 	 		       </div> 		          
  		      </div> 
  		  </div>
  		  
 	    <script>
-	    	$(document).ready(function(){
-	    		 
+	    	var startX = 0;
+	    	$(document).ready(function(){  		 
 	    		  var width = document.body.clientWidth * 0.8;
 	    		   $('.menu').css('width',width+'px')
 	    	     $('#noCloseWidget').widget({    	     	  
@@ -52,34 +52,9 @@
 	    	     	  left:0,
 	    	     	  distance:width,
 	    	     	  container: $('#container')[0],
-	    	        onClose : function(el){
-	    	            console.log('关闭了widget');
-	    	        }	
-	    	    })
-	    	    
-	    	    function handleTouchEvent(event) {
-					    //只跟踪一次触摸
-					    if (event.touches.length == 1) {
-					        var output = document.getElementById("output");
-					        switch (event.type) {
-					            case "touchstart":
-					                output.innerHTML = "Touch started (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
-					                break;
-					            case "touchend":
-					                output.innerHTML += "<br>Touch ended (" + event.changedTouches[0].clientX + "," + event.changeTouches[0].clientY + ")";
-					                break;
-					            case "touchmove":
-					                event.preventDefault(); //阻止滚动
-					                output.innerHTML += "<br>Touch moved (" + event.changedTouches[0].clientX + "," + event.changedTouches[0].clientY + ")";
-					                break;
-					        }
-					    }
-					}
-					document.addEventListener("touchstart", handleTouchEvent, false);
-					document.addEventListener("touchend", handleTouchEvent, false);
-					document.addEventListener("touchmove", handleTouchEvent, false);
-	    	   
-	    	})
+	    	     	  touch:true, 	        
+	    	    });
+	    	});
 	    	
 	    	function showOrCloseWidget(){
 	    		   $('#noCloseWidget').widget('isShow') ? $('#noCloseWidget').widget('close') : $('#noCloseWidget').widget('open');

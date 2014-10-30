@@ -9,14 +9,16 @@
 	 	   this.element = $(element);
 	 	   this.status = 'closed';
 	 	   this.defaults = {
-					container : window.document.body,
+					container : window.document.body,  /*widget所在容器dom对象*/
 					speed : 300,                /*滑出速度 ms*/
-					distance : window.document.body.clientWidth,   /*widget滑出距离*/
-					clickClose : false,  
+					distance : window.document.body.clientWidth,   /*widget滑动距离*/
+					clickClose : false,        /*点击是否关闭*/
 					widgetBodyClass : '.widget-body',
 					onClose : undefined,
-					direction:'left',
-					left:undefined
+					onShow : undefined,
+					direction:'left',   /*初始方向,open方法方向*/
+					left:undefined,    /*初始位置*/
+					touch:false,       /*是否支持滑动*/
 				};			 		
 			 this._init(options);
 	 };
@@ -29,18 +31,24 @@
 	     	  	  opts.container.style.overflowX = 'hidden';
 	     	  	  opts.container.style.overflowY = 'auto'
 	     	      instance.distance =  typeof opts.distance == 'undefined'? opts.container.clientWidth : opts.distance;
-	     	    console.log(instance.distance)
-	     	    var x = instance.x = typeof opts.left == 'undefined'? (opts.direction == 'left' ? instance.distance : -instance.distance) : opts.left;
+	     	      var x = instance.nowX = instance.initX = typeof opts.left == 'undefined'? (opts.direction == 'left' ? instance.distance : -instance.distance) : opts.left;	     	      
 	     	      var style = instance.element[0].style;
 		          style.webkitTransform = 'translate('+ x + 'px,0)' + 'translateZ(0)';
 					    style.msTransform =
 					    style.MozTransform =
 					    style.OTransform = 'translateX('+ x + 'px)';   
+					    
+					    if(opts.touch){
+						    instance.element[0].addEventListener("touchstart",instance._handleTouchEvent, false);
+						    instance.element[0].addEventListener("touchend", instance._handleTouchEvent, false);
+						    instance.element[0].addEventListener("touchmove", instance._handleTouchEvent, false);
+					    }
 	     	  }else{	     	  	     	 
 	     	         alert('direction is not left or right');
 	     	  }   
 	     },
-	     _translate : function(el,speed,x){     	 
+	     _translate : function(el,speed,x){     
+	     	  this.nowX = x;	 
 	     	  var style = el[0].style;		
 						  style.webkitTransitionDuration =
 					    style.MozTransitionDuration =
@@ -57,8 +65,9 @@
 	     	    var el = instance.element;
 	     	    var opts = instance.options;
 	         	el.show();  
-	         	var x = opts.direction == 'left' ? instance.x - instance.distance : instance.x + instance.distance;
+	         	var x = opts.direction == 'left' ? instance.initX - instance.distance : instance.initX + instance.distance;
 						instance._translate(el,opts.speed,x);
+						if(opts.onShow)opts.onShow.call(el[0]);
 						instance.status = 'opened';
 						if(!opts.clickClose)return;
 				    el.unbind('click').bind('click',function(){						
@@ -74,12 +83,34 @@
 		     	  instance.status = 'closed';
 	     	    var el = instance.element;
 	     	    var opts = instance.options;
-		     	  instance._translate(el,opts.speed,instance.x);
-		     	  if(opts.onClose) opts.onClose(el);
+		     	  instance._translate(el,opts.speed,instance.initX);
+		     	  if(opts.onClose) opts.onClose.call(el[0]);
+		     },
+		     _moveto : function(x){
+		     		 x = x > this.distance ? this.distance : (x < this.initX ? this.initX : x);						         
+		     	   this._translate(this.element,100,x);
 		     },
 		     isShow: function(){
 		     	   return this.status == 'opened';
-		     }	
+		     },
+		     _handleTouchEvent : function(event) {
+		     	    var instance = $(this).data('widget');	     	    
+					    if (event.touches.length == 1) {
+					        switch (event.type) {
+					            case "touchstart":          
+									         instance.touchStartX = event.touches[0].pageX;
+									         instance.touchNowX = instance.nowX;
+					                break;
+					            case "touchend":          
+					                break;
+					            case "touchmove":
+					                event.preventDefault(); //阻止滚动	
+					                 var movex = event.touches[0].pageX - instance.touchStartX;	
+									         instance._moveto(instance.touchNowX+movex);
+					                break;
+					        }
+					    }
+					}	
 		 };
 	 $.fn.widget = function(options){		
 	 	   var thisCall = typeof options;
