@@ -13,14 +13,19 @@ Introduction
 ### Initial
     $('.widget').widget();
 ### Options
-    * speed - 窗口滑出速度，单位ms，默认300ms
-    * width - 窗口滑出距离，默认body的宽度
-    * noCloseClass - class名称，widget包含此class，则点击不关闭，默认widget-noclose
-    * widgetBodyClass - 内容主体class名称，默认widget-body
-    * onClose - 窗口关闭后调
-    * showRightToLeft - 窗口滑出方向，默认true，表示默认从右往左滑出
+    * container - widget页面所在容器dom对象,默认body
+    * speed - widget页面滑出速度，单位ms，默认300ms
+    * distance - widget页面滑出距离，默认body的宽度
+    * clickClose - 点击widget页面是否关闭，默认false
+    * widgetBodyClass - widget页面内容主体class名称，默认widget-body
+    * onShow - widget页面open后调
+    * onClose - widget页面close后调
+    * direction - widget页面open方向，left，表示默认从右往左滑出
+    * left - widget页面初始位置
+    * touch - 是否支持触屏事件移动，默认false
 ### Methods    
     * open  - $('.widget').widget('open');
     * close - $('.widget').widget('close');
+    * isShow - $('.widget').widget('isShow'); - 返回widget页面是否open,值为true或false
 ###  效果如下
 ![github](https://github.com/zhuxiaoping/jquery.widget.js/blob/master/widget.gif "github")
