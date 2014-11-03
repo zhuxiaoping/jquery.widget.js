@@ -1,0 +1,65 @@
+﻿<!DOCTYPE HTML>
+<html>
+ <head>
+ 	   <title>widget</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      <meta name="format-detection" content="telephone=no" />
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+      <script type="text/javascript" src="widget.js"></script>
+ 	</head>	
+ 	<style>
+ 		html,body{height:100%;}
+ 		body{max-width:640px;margin:0 auto;}
+ 		.widget{
+			width:100%;
+			height:100%;
+			position:absolute;			
+			top:0;
+			left:0;			
+			z-index: 100;							
+		}
+		.widget .widget-body{background:#ffffff;text-align:center;}
+		#container{width:100%;position:relative;min-height:100%;}
+		.menu{
+				height: 100%;
+				background: #83bf9f;
+				position: absolute;
+				left: 0;
+		}
+		.widget .menu-bar{text-align: left;margin:10px;}
+ 	</style>
+ 	<body>
+ 		  <div id="container">
+ 		  	 <div class="menu">菜单</div>	  	  	 
+ 		     <div id="noCloseWidget" class="widget" style="background: #ffffff;text-align:center;">
+	 		       <div class="menu-bar"><input type="button" value="菜单" onclick="showOrCloseWidget()"/></div>
+	 		       <div class="widget-body">
+	 		           	<div id="output" style="text-align:left;">主页内容</div>
+	 		       </div> 		          
+ 		      </div> 
+ 		  </div>
+ 		  
+	    <script>
+	    	var startX = 0;
+	    	$(document).ready(function(){  		 
+	    		  var width = document.body.clientWidth * 0.8;
+	    		   $('.menu').css('width',width+'px')
+	    		   
+	    	     userWidget = new Widget($('#noCloseWidget')[0],{ 	     	  
+	    	     	  direction:'right',
+	    	     	  left:0,
+	    	     	  distance:width,
+	    	     	  container: $('#container')[0],
+	    	     	  touch:true, 	        
+	    	    });
+	    	});
+	    	
+	    function showOrCloseWidget(){
+	    		   userWidget.isShow() ?userWidget.close() : userWidget.open();
+	    		}
+	    </script>
+  </body>
+</html>

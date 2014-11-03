@@ -4,13 +4,13 @@
  * 2014-10-27 v1.3
 */
 
-(function(window,$) {
-	 var tranPrefix = (/webkit/i).test(navigator.appVersion) ? 'webkit' :
+(function() {
+	var tranPrefix = (/webkit/i).test(navigator.appVersion) ? 'webkit' :
 		(/firefox/i).test(navigator.userAgent) ? 'Moz' :
 		(/trident/i).test(navigator.userAgent) ? 'ms' :
 		'opera' in window ? 'O' : '';
-	 $.Widget = function(options,element){
-	 	   this.element = $(element);
+	 Widget = function(element,options){
+	 	   this.element = element;
 	 	   this.status = 'closed';
 	 	   this.defaults = {
 					container : window.document.body,  /*widget所在容器dom对象*/
@@ -26,7 +26,7 @@
 				};			 		
 			 this._init(options);
 	 };
-	 $.Widget.prototype = {
+	 Widget.prototype = {
 	     _init : function(options){
 	     	  var instance = this;	     	 
 	     	  var opts = instance.options = $.extend({}, instance.defaults, options || {});	
@@ -36,41 +36,44 @@
 	     	  	  opts.container.style.overflowY = 'auto'
 	     	      instance.distance =  typeof opts.distance == 'undefined'? opts.container.clientWidth : opts.distance;
 	     	      var x = instance.nowX = instance.initX = typeof opts.left == 'undefined'? (opts.direction == 'left' ? instance.distance : -instance.distance) : opts.left;	     	      
-	     	      var style = instance.element[0].style;
-		          style[tranPrefix+'Transform'] = 'translate('+ x + 'px,0)';					  
+	     	      var style = instance.element.style;
+		          style[tranPrefix+'Transform'] = 'translate('+ x + 'px,0)';		  
 					    
 					    if(opts.touch && ('ontouchstart' in window)){
-						    instance.element[0].addEventListener("touchstart",instance, false);
-						    instance.element[0].addEventListener("touchend", instance, false);
-						    instance.element[0].addEventListener("touchmove", instance, false);
+						    instance.element.addEventListener("touchstart",instance, false);
+						    instance.element.addEventListener("touchend", instance, false);
+						    instance.element.addEventListener("touchmove", instance, false);
 					    }
 	     	  }else{	     	  	     	 
 	     	         alert('direction is not left or right');
 	     	  }   
 	     },
-	     _translate : function(el,speed,x){     
+	     _translate : function(element,speed,x){     
 	     	  this.nowX = x;	 
-	     	  var style = el[0].style;		
-					   style[tranPrefix+'TransitionDuration'] = speed + 'ms'; 
-					   style[tranPrefix+'Transform'] = 'translate('+ x + 'px,0)';
+	     	  var style = element.style;		
+					style[tranPrefix+'TransitionDuration'] = speed + 'ms'; 
+					style[tranPrefix+'Transform'] = 'translate('+ x + 'px,0)';
 	     },
 	     open : function(){
 	     	    var instance = this;
 	     	    var el = instance.element;
 	     	    var opts = instance.options;
-	         	el.show();  
+	         	el.style.display = 'block';  
 	         	var x = opts.direction == 'left' ? instance.initX - instance.distance : instance.initX + instance.distance;
 						instance._translate(el,opts.speed,x);
-						if(opts.onShow)opts.onShow.call(el[0]);
+						if(opts.onShow)opts.onShow.call(el);
 						instance.status = 'opened';
 						if(!opts.clickClose)return;
-				    el.unbind('click').bind('click',function(){						
+				    instance._bind(el,'click',function(){						
 							    instance.close();
 						});
-						if(opts.widgetBodyClass)
-						el.find(opts.widgetBodyClass).unbind('click').click(function (event) {
-					        event.stopPropagation();
-					  });   						
+						var elBody = el.getElementsByClassName(opts.widgetBodyClass);
+							if(opts.widgetBodyClass && elBody.length > 0){	
+								elBody = elBody[0];				
+								instance._bind(elBody,'click',function (event) {
+							        event.stopPropagation();
+							  });  
+						} 						
 		     },
 		     close : function(){
 		     	  var instance = this;
@@ -78,7 +81,7 @@
 	     	    var el = instance.element;
 	     	    var opts = instance.options;
 		     	  instance._translate(el,opts.speed,instance.initX);
-		     	  if(opts.onClose) opts.onClose.call(el[0]);
+		     	  if(opts.onClose) opts.onClose.call(el);
 		     },
 		     _moveto : function(x){
 		     		 x = x > this.distance ? this.distance : (x < this.initX ? this.initX : x);						         
@@ -104,58 +107,16 @@
 					                break;
 					        }
 					    }
-					}	
+					}	,
+					_bind: function (el,type,callback) {
+						el.addEventListener(type, callback, false);
+					},
+				
+					_unbind: function (el,type,callback) {
+						el.removeEventListener(type, callback, false);
+					},
 		 };
-	 $.fn.widget = function(options){		
-	 	   var thisCall = typeof options;
-
-        switch (thisCall) {
-
-            // method 
-            case 'string':
-                if(this.length > 1)return;
-                var args = Array.prototype.slice.call(arguments, 1);                								
-									var instance = $.data(this[0], 'widget');			
-									if (!instance) {										
-										return false;
-									}				
-									if (!$.isFunction(instance[options]) || options.charAt(0) === "_") {									
-										return false;
-									}
-									return instance[options].apply(instance, args);
-												
-				            break;
-				
-				            // creation 
-				            case 'object':
-				
-				                this.each(function () {
-				
-				                var instance = $.data(this, 'widget');
-				
-				                if (instance) {
-				
-				                    // update options of current instance
-				                    instance.update(options);
-				
-				                } else {
-				
-				                    // initialize new instance
-				                    instance = new $.Widget(options, this);
-				
-				                    // don't attach if instantiation failed
-				                    if (!instance.failed) {
-				                        $.data(this, 'widget', instance);
-				                    }
-				
-				                }
-				
-				            });
-				            return this;
-				            break;
-				
-				        }
-
-        
-	 };
-})(window,jQuery);
+	 
+if (typeof exports !== 'undefined') exports.Widget = Widget;
+else window.Widget = Widget;
+})();

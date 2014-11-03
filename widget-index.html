@@ -1,0 +1,68 @@
+﻿<!DOCTYPE HTML>
+<html>
+ <head>
+ 	   <title>widget</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      <meta name="format-detection" content="telephone=no" />
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+      <script type="text/javascript" src="widget.js"></script>
+ 	</head>	
+ 	<style>
+ 		html,body{height:100%;}
+ 		body{max-width:640px;margin:0 auto;}
+ 		.widget{
+			width:100%;
+			height:100%;
+			position:absolute;			
+			top:0;
+			left:0;			
+			z-index: 100;							
+		}
+		.widget .widget-body{background:#ffffff;text-align:center;}
+		#container{width:100%;position:relative;min-height:100%;}
+ 	</style>
+ 	<body>
+ 		  <div id="container">
+ 		  	 手机端从右向左划出的页面
+ 		  	 <input id="button" type="button" value="点我弹出widget1"/>
+ 		  	 <input id="button2" type="button" value="点我弹出widget2"/>
+ 		  	 <div id="testWidget" class="widget" style="background: rgba(0,0,0,0.5);">
+	 		      <div class="widget-body">
+	 		          <p style="padding:20px 0;text-align:center;">点我不会关闭，点击其他区域关闭</p>
+	 		      </div>	
+ 		      </div>
+ 		     <div id="noCloseWidget" class="widget" style="background: #ffffff;text-align:center;">
+	 		          <p style="padding:20px 0;">点我不会关闭，点击其他区域也不关闭</p>
+	 		          <input type="button" value="点我关闭widget2" onclick="widget2.close()"/>
+ 		      </div> 
+ 		  </div>
+ 		  
+	    <script>
+	    	$(document).ready(function(){	    		 
+	    	    widget1 = new Widget($('#testWidget')[0],{  
+	    	    	  clickClose:true,
+	    	    	  container: $('#container')[0],  	    	 
+	    	        onClose : function(el){
+	    	            console.log('关闭了widget');
+	    	        }	
+	    	    })
+	    	     widget2 = new Widget($('#noCloseWidget')[0],{    	     	  
+	    	     	  direction:'right',
+	    	     	  container: $('#container')[0],
+	    	        onClose : function(el){
+	    	            console.log('关闭了widget');
+	    	        }	
+	    	    })
+	    	    $("#button").bind('click',function(){
+	    	        	widget1.open();
+	    	    })
+	    	    $("#button2").bind('click',function(){
+	    	        	widget2.open()
+	    	    })
+	    	})
+	    </script>
+  </body>
+</html>
